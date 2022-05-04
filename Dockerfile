@@ -10,7 +10,8 @@ WORKDIR /src
 COPY ["minicsharp.csproj", "./"]
 RUN dotnet restore -r linux-musl-x64 minicsharp.csproj
 COPY . .
-RUN dotnet publish minicsharp.csproj --self-contained -c Release -r linux-musl-x64 -p:PublishTrimmed=true -o /app/publish
+ARG SINGLE_FILE=false
+RUN dotnet publish minicsharp.csproj --self-contained -c Release -r linux-musl-x64 -p:PublishTrimmed=true -p:PublishSingleFile=$SINGLE_FILE -p:InvariantGlobalization=true -o /app/publish
 
 FROM base
 WORKDIR /app
